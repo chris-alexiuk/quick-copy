@@ -1,0 +1,54 @@
+version: 1
+
+defaults:
+  user: myuser
+  port: 22
+
+  # When dest is "workstation" with no ":alias", use this host path
+  default_path_alias: scratch
+
+  # Zip behavior for directory dumps
+  zip:
+    exclude:
+      - ".git/"
+      - "node_modules/"
+      - "__pycache__/"
+      - ".venv/"
+      - "*.tmp"
+      - ".DS_Store"
+      - "target/"
+    follow_symlinks: false
+
+  # Where to stage archives locally before scp
+  staging_dir: "/tmp"
+
+hosts:
+  workstation:
+    host: "workstation.local"
+    role: "development"
+    paths:
+      scratch: "/home/myuser/scratch"
+      projects: "/home/myuser/projects"
+
+  server:
+    host: "192.168.1.100"
+    role: "compute"
+    paths:
+      scratch: "/home/myuser/scratch"
+      data: "/data"
+
+  nas:
+    host: "nas.local"
+    role: "storage"
+    paths:
+      backups: "/mnt/backups"
+      shared: "/mnt/shared"
+      dumps: "/mnt/shared/quick-copy"
+
+shares:
+  # Default destination for `qc dump`
+  default: "nas:dumps"
+
+  # Layout for dump directory structure
+  # {source} = local hostname, {date} = YYYYMMDD
+  layout: "{source}/{date}"

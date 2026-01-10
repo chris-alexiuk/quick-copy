@@ -1,0 +1,37 @@
+[package]
+name = "quick-copy"
+version = "0.1.0"
+edition = "2021"
+description = "Fast SSH/SCP file transfer tool with named targets and path aliases"
+license = "MIT"
+readme = "README.md"
+keywords = ["ssh", "scp", "transfer", "homelab", "cli"]
+categories = ["command-line-utilities", "network-programming"]
+exclude = ["target/", "config.yaml", ".git/"]
+# repository = "https://github.com/yourusername/quick-copy"
+# homepage = "https://github.com/yourusername/quick-copy"
+
+[[bin]]
+name = "quick-copy"
+path = "src/main.rs"
+
+[[bin]]
+name = "qc"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+zip = "2"
+dirs = "5"
+glob = "0.3"
+hostname = "0.4"
+chrono = "0.4"
+thiserror = "2"
+walkdir = "2"
+serde_json = "1"
+
+[profile.release]
+strip = true
+lto = true
