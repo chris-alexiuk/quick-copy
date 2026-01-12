@@ -2,6 +2,8 @@
 
 Fast SSH/SCP file transfer tool with named targets and path aliases.
 
+**[Documentation](https://chris-alexiuk.github.io/quick-copy/)** | [GitHub](https://github.com/chris-alexiuk/quick-copy) | [crates.io](https://crates.io/crates/quick-copy)
+
 ## Installation
 
 ```bash
