@@ -22,12 +22,37 @@ pub fn run(
     extract: bool,
     config: &Config,
     verbose: bool,
+    dry_run: bool,
 ) -> Result<TransferResult, PullError> {
     // Resolve source
     let resolved = resolve::resolve(source, config)?;
 
     // Get current directory
     let cwd = std::env::current_dir().map_err(|_| PullError::NoCwd)?;
+
+    if dry_run {
+        println!("[DRY RUN] Would pull remote directory:");
+        println!("  Source: {}@{}:{}", resolved.user, resolved.host, resolved.path);
+        println!("  Destination: {}", cwd.display());
+        if extract {
+            println!("  Extract: Yes (would extract after download)");
+        } else {
+            println!("  Extract: No (would keep as zip)");
+        }
+
+        return Ok(TransferResult {
+            source: format!("{}:{}", resolved.host, resolved.path),
+            dest_host: hostname::get()
+                .ok()
+                .and_then(|h| h.into_string().ok())
+                .unwrap_or_else(|| "localhost".to_string()),
+            dest_path: cwd.display().to_string(),
+            bytes: 0,
+            duration_ms: 0,
+            mode: "pull (dry-run)".to_string(),
+            archive_path: None,
+        });
+    }
 
     // Combine excludes from config
     let excludes = config.defaults.zip.exclude.clone();

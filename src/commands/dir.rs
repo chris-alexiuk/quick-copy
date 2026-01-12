@@ -22,6 +22,7 @@ pub fn run(
     extract: bool,
     config: &Config,
     verbose: bool,
+    dry_run: bool,
 ) -> Result<TransferResult, DirError> {
     // Get current directory
     let cwd = std::env::current_dir().map_err(|_| archive::ArchiveError::NoCwd)?;
@@ -30,14 +31,34 @@ pub fn run(
     let mut excludes = config.defaults.zip.exclude.clone();
     excludes.extend(extra_excludes.iter().cloned());
 
+    // Resolve destination
+    let resolved = resolve::resolve(dest, config)?;
+
+    if dry_run {
+        println!("[DRY RUN] Would zip and copy directory:");
+        println!("  Source: {}", cwd.display());
+        println!("  Destination: {}@{}:{}", resolved.user, resolved.host, resolved.path);
+        println!("  Excludes: {:?}", excludes);
+        if extract {
+            println!("  Extract: Yes (would extract after upload)");
+        }
+
+        return Ok(TransferResult {
+            source: cwd.display().to_string(),
+            dest_host: resolved.host,
+            dest_path: resolved.path,
+            bytes: 0,
+            duration_ms: 0,
+            mode: "dir (dry-run)".to_string(),
+            archive_path: None,
+        });
+    }
+
     // Create archive
     if verbose {
         eprintln!("Creating archive of {}...", cwd.display());
     }
     let archive_path = archive::create_archive(&cwd, &excludes, &config.defaults.staging_dir, name)?;
-
-    // Resolve destination
-    let resolved = resolve::resolve(dest, config)?;
 
     // Build remote path
     let archive_name = archive_path

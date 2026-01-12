@@ -1,6 +1,6 @@
 [package]
 name = "quick-copy"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Fast SSH/SCP file transfer tool with named targets and path aliases"
 license = "MIT"

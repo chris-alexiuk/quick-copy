@@ -40,7 +40,7 @@ fn main() -> ExitCode {
 
     match cli.command {
         Commands::File { path, dest, overwrite } => {
-            match commands::file::run(&path, &dest, overwrite, &config, cli.verbose) {
+            match commands::file::run(&path, &dest, overwrite, &config, cli.verbose, cli.dry_run) {
                 Ok(result) => {
                     output.print(&result);
                     ExitCode::SUCCESS
@@ -53,7 +53,7 @@ fn main() -> ExitCode {
         }
 
         Commands::Dir { dest, name, exclude, extract } => {
-            match commands::dir::run(&dest, name.as_deref(), &exclude, extract, &config, cli.verbose) {
+            match commands::dir::run(&dest, name.as_deref(), &exclude, extract, &config, cli.verbose, cli.dry_run) {
                 Ok(result) => {
                     output.print(&result);
                     ExitCode::SUCCESS
@@ -66,7 +66,7 @@ fn main() -> ExitCode {
         }
 
         Commands::Dump { path, to } => {
-            match commands::dump::run(path.as_deref(), to.as_deref(), &config, cli.verbose) {
+            match commands::dump::run(path.as_deref(), to.as_deref(), &config, cli.verbose, cli.dry_run) {
                 Ok(result) => {
                     output.print(&result);
                     ExitCode::SUCCESS
@@ -79,7 +79,7 @@ fn main() -> ExitCode {
         }
 
         Commands::Pull { source, no_extract } => {
-            match commands::pull::run(&source, !no_extract, &config, cli.verbose) {
+            match commands::pull::run(&source, !no_extract, &config, cli.verbose, cli.dry_run) {
                 Ok(result) => {
                     output.print(&result);
                     ExitCode::SUCCESS

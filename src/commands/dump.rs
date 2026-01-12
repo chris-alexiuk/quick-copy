@@ -23,6 +23,7 @@ pub fn run(
     to: Option<&str>,
     config: &Config,
     verbose: bool,
+    dry_run: bool,
 ) -> Result<TransferResult, DumpError> {
     // Default to current directory
     let source_path = match path {
@@ -41,6 +42,29 @@ pub fn run(
     // Build dump layout path
     let layout_path = build_layout_path(&config.shares.layout);
     let base_remote_path = format!("{}/{}", resolved.path, layout_path);
+
+    if dry_run {
+        println!("[DRY RUN] Would dump to shared storage:");
+        println!("  Source: {}", source_path.display());
+        println!("  Share: {}", share_dest);
+        println!("  Destination: {}@{}:{}", resolved.user, resolved.host, base_remote_path);
+        println!("  Layout: {}", config.shares.layout);
+        if source_path.is_dir() {
+            println!("  Type: Directory (would create zip archive)");
+        } else {
+            println!("  Type: File");
+        }
+
+        return Ok(TransferResult {
+            source: source_path.display().to_string(),
+            dest_host: resolved.host,
+            dest_path: base_remote_path,
+            bytes: 0,
+            duration_ms: 0,
+            mode: "dump (dry-run)".to_string(),
+            archive_path: None,
+        });
+    }
 
     let (local_file, remote_path, is_archive) = if source_path.is_dir() {
         // Zip directory
