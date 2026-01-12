@@ -8,8 +8,9 @@ readme = "README.md"
 keywords = ["ssh", "scp", "transfer", "homelab", "cli"]
 categories = ["command-line-utilities", "network-programming"]
 exclude = ["target/", "config.yaml", ".git/"]
-# repository = "https://github.com/yourusername/quick-copy"
-# homepage = "https://github.com/yourusername/quick-copy"
+repository = "https://github.com/chris-alexiuk/quick-copy"
+homepage = "https://chris-alexiuk.github.io/quick-copy"
+documentation = "https://chris-alexiuk.github.io/quick-copy"
 
 [[bin]]
 name = "quick-copy"
